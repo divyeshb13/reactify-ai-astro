@@ -14,7 +14,7 @@ const buttonVariants = cva(
           "bg-primary text-primary-foreground hover:bg-primary/90 hover:scale-105",
         hero: "bg-primary text-white border-0 hover:scale-105 shadow-lg hover:shadow-xl font-semibold",
         glass:
-          "relative isolate overflow-hidden text-foreground px-10 py-7 rounded-lg font-medium bg-primary/5 backdrop-blur-xl border border-primary/20 border-primary-foreground/20 transition-all duration-500  hover-border-1",
+          "relative isolate overflow-hidden text-foreground px-4 py-2 rounded-lg font-medium bg-primary/5 backdrop-blur-xl border border-primary/20 border-primary-foreground/20 transition-all duration-500  hover-border-1",
       },
       size: {
         default: "h-10 px-4 py-2",
@@ -55,5 +55,5 @@ Button.displayName = "Button";
 /* ================== END: Component ================== */
 
 /* ================== START: Export ================== */
-export { Button };
+export { Button, buttonVariants };
 /* ================== END: Export ================== */

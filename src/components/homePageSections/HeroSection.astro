@@ -5,7 +5,7 @@ import NeuralLine from "@/components/background_animation/NeuralLine.astro";
 import FloatingParticles from "@/components/background_animation/FloatingParticles.astro";
 import FloatingHeroIcons from "@/components/background_animation/FloatingHeroIcons.astro";
 import CardGradientBg from "@/components/background_animation/CardGradientBg.astro";
-import { Button } from "@/components/interactive/ui/button";
+import { buttonVariants } from "@/components/interactive/ui/button";
 import { ArrowRight, Play } from "lucide-react";
 import { Image } from "astro:assets";
 ---
@@ -94,32 +94,35 @@ import { Image } from "astro:assets";
         data-aos="fade-up"
         data-aos-delay="400"
       >
-        <a href="#services" class="inline-flex">
-          <Button
-            variant="hero"
-            size="lg"
-            className="text-base sm:text-lg px-10 py-7 relative overflow-hidden group"
-          >
-            <span class="relative z-10 flex items-center gap-3">
-              Explore Our Services
-              <ArrowRight
-                className="w-6 h-6 group-hover:translate-x-1 transition-transform"
-              />
-            </span>
-            <CardGradientBg
-              className="opacity-0 group-hover:opacity-30 transition-opacity"
+        <a
+          href="#services"
+          class={buttonVariants({
+            variant: "hero",
+            size: "lg",
+            className:
+              "text-base sm:text-lg px-10 py-7 relative overflow-hidden group",
+          })}
+        >
+          <span class="relative z-10 flex items-center gap-3">
+            Explore Our Services
+            <ArrowRight
+              className="w-6 h-6 group-hover:translate-x-1 transition-transform"
             />
-          </Button>
+          </span>
+          <CardGradientBg
+            className="opacity-0 group-hover:opacity-30 transition-opacity"
+          />
         </a>
-        <a href="#about" class="inline-flex">
-          <Button
-            variant="glass"
-            size="lg"
-            className="relative text-base sm:text-lg px-10 py-7"
-          >
-            <Play className="w-6 h-6" />
-            Learn More
-          </Button>
+        <a
+          href="#about"
+          class={buttonVariants({
+            variant: "glass",
+            size: "lg",
+            className: "relative text-base sm:text-lg px-10 py-7",
+          })}
+        >
+          <Play className="w-6 h-6" />
+          Learn More
         </a>
       </div>
 

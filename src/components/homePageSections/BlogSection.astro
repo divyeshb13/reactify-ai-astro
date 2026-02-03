@@ -1,5 +1,5 @@
 ---
-import { Button } from "@/components/interactive/ui/button";
+import { buttonVariants } from "@/components/interactive/ui/button";
 import Heading from "@/components/common/Heading.astro";
 import NeuralLine from "@/components/background_animation/NeuralLine.astro";
 import BlogCard from "@/components/cards/BlogCard.astro";
@@ -84,11 +84,14 @@ const formatDate = (dateString: string) => {
       <!-- End Blog Posts Grid -->
       <div class="text-center" data-aos="fade-up" data-aos-delay="600">
         <!-- View All Articles Button -->
-        <a href="/blog">
-          <Button variant="hero" size="lg" className="w-fit mx-auto"
-            >View All Articles</Button
-          >
-        </a>
+        <a
+          href="/blog"
+          class={buttonVariants({
+            variant: "hero",
+            size: "lg",
+            className: "w-fit mx-auto",
+          })}>View All Articles</a
+        >
       </div>
     </div>
   </div>

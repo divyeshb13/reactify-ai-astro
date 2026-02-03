@@ -1,7 +1,7 @@
 ---
 import type { CTACardProps } from "@/utils/types";
 import { ArrowRight } from "lucide-react";
-import { Button } from "@/components/interactive/ui/button";
+import { buttonVariants } from "@/components/interactive/ui/button";
 
 interface Props extends CTACardProps {}
 
@@ -37,14 +37,15 @@ const href = to || "/contact";
     }
   </div>
 
-  <a {href}>
-    <Button
-      variant="hero"
-      size="lg"
-      className="text-xs sm:text-sm w-fit mx-auto relative z-[1]"
-    >
-      {actions}
-      <ArrowRight className="w-5 h-5" />
-    </Button>
+  <a
+    {href}
+    class={buttonVariants({
+      variant: "hero",
+      size: "lg",
+      className: "text-xs sm:text-sm w-fit mx-auto relative z-[1]",
+    })}
+  >
+    {actions}
+    <ArrowRight className="w-5 h-5" />
   </a>
 </div>

@@ -1,6 +1,6 @@
 ---
 import type { TeamCardProps } from "@/utils/types";
-import { Button } from "@/components/interactive/ui/button";
+import { buttonVariants } from "@/components/interactive/ui/button";
 import { Linkedin, X, Github, Star } from "lucide-react";
 import TeamCardInteractive from "@/components/interactive/TeamCardInteractive";
 import { Image } from "astro:assets";
@@ -44,28 +44,40 @@ const { image, name, role, bio, social, index, classname } = Astro.props;
   <div class="flex justify-center gap-3" style={{ zIndex: 2 }}>
     {
       social?.linkedin && (
-        <a href={social.linkedin} target="_blank" rel="noopener noreferrer">
-          <Button variant="glass">
-            <Linkedin className="size-3 sm:size-4" />
-          </Button>
+        <a
+          href={social.linkedin}
+          target="_blank"
+          rel="noopener noreferrer"
+          class={buttonVariants({ variant: "glass" })}
+          aria-label="LinkedIn Profile"
+        >
+          <Linkedin className="size-3 sm:size-4" />
         </a>
       )
     }
     {
       social?.x && (
-        <a href={social.x} target="_blank" rel="noopener noreferrer">
-          <Button variant="glass">
-            <X className="size-3 sm:size-4" />
-          </Button>
+        <a
+          href={social.x}
+          target="_blank"
+          rel="noopener noreferrer"
+          class={buttonVariants({ variant: "glass" })}
+          aria-label="X Profile"
+        >
+          <X className="size-3 sm:size-4" />
         </a>
       )
     }
     {
       social?.github && (
-        <a href={social.github} target="_blank" rel="noopener noreferrer">
-          <Button variant="glass">
-            <Github className="size-3 sm:size-4" />
-          </Button>
+        <a
+          href={social.github}
+          target="_blank"
+          rel="noopener noreferrer"
+          class={buttonVariants({ variant: "glass" })}
+          aria-label="Github Profile"
+        >
+          <Github className="size-3 sm:size-4" />
         </a>
       )
     }
