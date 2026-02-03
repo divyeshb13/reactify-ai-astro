@@ -7,7 +7,6 @@ import Header from "@/components/Header.astro";
 import Footer from "@/components/Footer.astro";
 
 import BackToTop from "@/components/common/BackToTop.astro";
-import ThemedToastContainer from "@/components/interactive/common/ThemedToastContainer";
 
 interface Props {
   title?: string;
@@ -98,9 +97,6 @@ const {
   </head>
 
   <body class="min-h-screen bg-background text-sm sm:text-base">
-    <!-- Toast Notifications (React Island) -->
-    <ThemedToastContainer client:idle />
-
     <!-- Header -->
     <Header />
 

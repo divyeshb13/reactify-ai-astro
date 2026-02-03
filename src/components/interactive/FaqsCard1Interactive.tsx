@@ -61,7 +61,7 @@ const FaqsCard1Interactive: React.FC<Props> = ({
       >
         {/* NeuralLine implementation in React */}
         <div className={`absolute top-0 left-0 right-0 w-full`}>
-          <div className="relative h-px overflow-hidden bg-[image:var(--gradient-primary)] opacity-30" />
+          <div className="relative h-px overflow-hidden bg-(image:--gradient-primary) opacity-30" />
         </div>
         <div className="p-4 sm:p-6 z-10">
           <p className="text-muted-foreground leading-relaxed">{answer}</p>

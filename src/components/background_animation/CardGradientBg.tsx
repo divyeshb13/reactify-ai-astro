@@ -4,7 +4,7 @@ import React from "react";
 const CardGradientBg: React.FC<CardGradientBgProps> = ({
   className = "",
   hover = false,
-  gradientClass = "bg-[image:var(--gradient-primary)]",
+  gradientClass = "bg-(image:--gradient-primary)",
   gridOpacity = 0.15,
   children,
 }) => (
