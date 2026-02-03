@@ -10,6 +10,7 @@ import tailwindcss from "@tailwindcss/vite";
 // https://astro.build/config
 export default defineConfig({
   site: "https://reactify-ai-astro.vercel.app",
+  // useCdn: true,
   output: "server",
   /* adapter: node({
     mode: "standalone",
