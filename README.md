@@ -1,6 +1,6 @@
-# ReactifyAI - Astro 5 AI Startup Template
+# ReactifyAI - Astro 5 AI Startup Website
 
-ReactifyAI is a high-performance, modern web template designed for AI startups and tech companies. Originally a React application, it has been fully converted to **Astro 5** to leverage Static Site Generation (SSG), resulting in blazing-fast performance, superior SEO, and seamless content management via Sanity CMS.
+ReactifyAI is a high-performance, modern website designed for AI startups and tech companies. Originally a React application, it has been fully converted to **Astro 5** to leverage Static Site Generation (SSG), resulting in blazing-fast performance, superior SEO, and seamless content management via Sanity CMS.
 
 [**🚀 Live Demo**](https://reactify-ai-astro.vercel.app)
 
