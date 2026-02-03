@@ -1,0 +1,399 @@
+---
+import { Menu, X, ChevronDown } from "lucide-react";
+import { headerPagesMenu } from "@/utils/const";
+import DropDown from "@/components/interactive/ui/DropDown";
+import ThemeToggle from "@/components/interactive/ThemeToggle";
+import NeuralLine from "@/components/background_animation/NeuralLine.astro";
+import { Image } from "astro:assets";
+
+// Get current path for active state
+const currentPath = Astro.url.pathname;
+---
+
+<header
+  id="main-header"
+  class="fixed inset-x-0 top-0 z-50 transition-all duration-300 bg-transparent"
+>
+  <div class="container mx-auto px-4 py-4">
+    <div class="flex items-center justify-between">
+      <!-- Logo -->
+      <button
+        type="button"
+        aria-label="Go to home"
+        class="flex items-center gap-1 cursor-pointer"
+        id="logo-button"
+      >
+        <Image
+          src="/images/logo.svg"
+          alt="Site Logo"
+          width={44}
+          height={44}
+          class="size-11"
+        />
+        <div>
+          <h1 class="text-xl sm:text-2xl font-bold text-primary">ReactifyAI</h1>
+          <p class="text-xs text-muted-foreground font-medium text-left">
+            AI Solutions
+          </p>
+        </div>
+      </button>
+
+      <!-- Desktop nav -->
+      <nav class="hidden lg:flex items-center gap-6" aria-label="Primary">
+        <!-- Home -->
+        <button
+          type="button"
+          class:list={[
+            "px-2 py-1 cursor-pointer home-nav-link",
+            currentPath === "/" && "text-primary",
+          ]}
+          data-scroll-to="home"
+        >
+          Home
+        </button>
+
+        <!-- About -->
+        <button
+          type="button"
+          class:list={[
+            "px-2 py-1 cursor-pointer about-nav-link",
+            currentPath === "/" && "text-primary",
+          ]}
+          data-scroll-to="about"
+        >
+          About
+        </button>
+
+        <div>
+          <DropDown
+            client:load
+            label="Pages"
+            items={headerPagesMenu}
+            activePath={currentPath}
+            className="relative"
+          />
+        </div>
+
+        <a
+          href="/blog"
+          class={`px-2 py-1 cursor-pointer font-medium about-nav-link ${currentPath === "/blog" ? "text-primary" : ""}`}
+          role="menuitem"
+        >
+          Blog
+        </a>
+      </nav>
+
+      <!-- Right controls -->
+      <div class="flex items-center gap-3">
+        <ThemeToggle client:load />
+        <a
+          href="/contact"
+          class="hidden lg:inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm ring-offset-background transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 cursor-pointer bg-primary border-0 hover:scale-105 text-white shadow-lg hover:shadow-xl font-semibold h-11 rounded-md px-8"
+        >
+          Contact
+        </a>
+
+        <!-- Mobile menu toggle -->
+        <button
+          id="mobile-menu-toggle"
+          class="lg:hidden p-2 rounded hover:bg-primary/10"
+          aria-label="Toggle menu"
+        >
+          <Menu id="menu-icon" className="w-6 h-6" />
+          <X id="close-icon" className="w-6 h-6 hidden" />
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile panel -->
+    <div
+      id="mobile-menu"
+      class="lg:hidden mt-4 pb-4 border-t pt-4 bg-card/50 backdrop-blur-xl rounded-md hidden"
+    >
+      <nav class="flex flex-col gap-2 px-2">
+        <button
+          class="text-left px-3 py-2 rounded mobile-nav-link"
+          data-scroll-to="home"
+        >
+          Home
+        </button>
+        <button
+          class="text-left px-3 py-2 rounded mobile-nav-link"
+          data-scroll-to="about"
+        >
+          About
+        </button>
+
+        <!-- Pages Accordion -->
+        <div class="mt-2">
+          <button
+            type="button"
+            class="w-full flex items-center justify-between px-3 py-2 rounded hover:bg-accent/5 mobile-accordion-toggle"
+            data-accordion="pages"
+          >
+            <span class="font-medium">Pages</span>
+            <ChevronDown
+              className="w-4 h-4 transition-transform accordion-icon"
+            />
+          </button>
+          <div
+            class="mt-2 space-y-1 px-2 hidden accordion-content"
+            data-accordion-content="pages"
+          >
+            {
+              headerPagesMenu.map((item) => {
+                return (
+                  <a
+                    href={item.to}
+                    class="block px-3 py-2 rounded hover:bg-primary/10 mobile-dropdown-link"
+                  >
+                    {item.name}
+                  </a>
+                );
+              })
+            }
+          </div>
+        </div>
+
+        <!-- Blog Accordion -->
+        <div class="mt-2">
+          <button
+            type="button"
+            class="w-full flex items-center justify-between px-3 py-2 rounded hover:bg-accent/5 mobile-accordion-toggle"
+            data-accordion="blog"
+          >
+            <span class="font-medium">Blog</span>
+            <ChevronDown
+              className="w-4 h-4 transition-transform accordion-icon"
+            />
+          </button>
+          <div
+            class="mt-2 space-y-1 px-2 hidden accordion-content"
+            data-accordion-content="blog"
+          >
+            <a
+              href="/blog"
+              class="block px-3 py-2 rounded hover:bg-accent/10 mobile-dropdown-link"
+            >
+              Blog
+            </a>
+          </div>
+        </div>
+
+        <!-- Mobile Contact Button -->
+        <button
+          id="mobile-contact-button"
+          class="mt-4 mx-4 inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm ring-offset-background transition-all duration-300 bg-primary text-white shadow-lg hover:shadow-xl font-semibold h-11 rounded-md px-8"
+        >
+          Contact Us
+        </button>
+      </nav>
+    </div>
+  </div>
+
+  <NeuralLine />
+</header>
+
+<script is:inline>
+  // Scroll to section functionality
+  /** @param {string} id */
+  const scrollToSection = (id) => {
+    const waitForElement = (elId, timeout = 2000, interval = 50) => {
+      return new Promise((resolve) => {
+        const stopAt = Date.now() + timeout;
+        const tryFind = () => {
+          const el = document.getElementById(elId);
+          if (el) return resolve(el);
+          if (Date.now() > stopAt) return resolve(null);
+          setTimeout(tryFind, interval);
+        };
+        tryFind();
+      });
+    };
+
+    const doScrollTo = (el) => {
+      if (el) {
+        const headerHeight = 80;
+        const pos = el.getBoundingClientRect().top + window.pageYOffset;
+        window.scrollTo({ top: pos - headerHeight, behavior: "smooth" });
+      } else if (id === "home") {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+    };
+
+    (async () => {
+      if (window.location.pathname !== "/") {
+        // Navigate to home with hash; home page script handles smooth scroll
+        window.location.href = `/#${id}`;
+        return;
+      }
+
+      const el = await waitForElement(id, 2500, 50);
+      doScrollTo(el);
+
+      // Close mobile menu if open
+      const mobileMenu = document.getElementById("mobile-menu");
+      const menuIcon = document.getElementById("menu-icon");
+      const closeIcon = document.getElementById("close-icon");
+      mobileMenu?.classList.add("hidden");
+      menuIcon?.classList.remove("hidden");
+      closeIcon?.classList.add("hidden");
+    })();
+  };
+
+  // Header scroll effect
+  const header = document.getElementById("main-header");
+  let isScrolled = false;
+  let activeSection = "home";
+
+  const onScroll = () => {
+    const scrollY = window.scrollY;
+    const newIsScrolled = scrollY > 20;
+
+    if (newIsScrolled !== isScrolled) {
+      isScrolled = newIsScrolled;
+      if (isScrolled) {
+        header?.classList.add(
+          "bg-card/50",
+          "backdrop-blur-xl",
+          "border-b",
+          "border-border",
+        );
+        header?.classList.remove("bg-transparent");
+      } else {
+        header?.classList.remove(
+          "bg-card/50",
+          "backdrop-blur-xl",
+          "border-b",
+          "border-border",
+        );
+        header?.classList.add("bg-transparent");
+      }
+    }
+
+    // Update activeSection only when on home page
+    if (window.location.pathname === "/") {
+      const ids = ["home", "about"];
+      let found = "home";
+      for (const id of ids) {
+        const el = document.getElementById(id);
+        if (!el) continue;
+        const rect = el.getBoundingClientRect();
+        if (rect.top <= 120 && rect.bottom > 120) {
+          found = id;
+          break;
+        }
+      }
+
+      if (found !== activeSection) {
+        activeSection = found;
+        // Update nav link active states
+        const homeLink = document.querySelector(".home-nav-link");
+        const aboutLink = document.querySelector(".about-nav-link");
+
+        if (activeSection === "home") {
+          homeLink?.classList.add("text-primary");
+          aboutLink?.classList.remove("text-primary");
+        } else if (activeSection === "about") {
+          homeLink?.classList.remove("text-primary");
+          aboutLink?.classList.add("text-primary");
+        }
+      }
+    } else {
+      activeSection = "";
+      document
+        .querySelector(".home-nav-link")
+        ?.classList.remove("text-primary");
+      document
+        .querySelector(".about-nav-link")
+        ?.classList.remove("text-primary");
+    }
+  };
+
+  onScroll();
+  window.addEventListener("scroll", onScroll, { passive: true });
+
+  // Logo button click
+  document.getElementById("logo-button")?.addEventListener("click", () => {
+    scrollToSection("home");
+  });
+
+  // Desktop nav scroll buttons
+  document.querySelectorAll("[data-scroll-to]").forEach((button) => {
+    button.addEventListener("click", () => {
+      if (!(button instanceof HTMLElement)) return;
+      const target = button.dataset.scrollTo;
+      if (target) scrollToSection(target);
+    });
+  });
+
+  // Mobile menu toggle
+  const mobileMenuToggle = document.getElementById("mobile-menu-toggle");
+  const mobileMenu = document.getElementById("mobile-menu");
+  const menuIcon = document.getElementById("menu-icon");
+  const closeIcon = document.getElementById("close-icon");
+
+  mobileMenuToggle?.addEventListener("click", () => {
+    const isOpen = !mobileMenu?.classList.contains("hidden");
+
+    if (isOpen) {
+      mobileMenu?.classList.add("hidden");
+      menuIcon?.classList.remove("hidden");
+      closeIcon?.classList.add("hidden");
+    } else {
+      mobileMenu?.classList.remove("hidden");
+      menuIcon?.classList.add("hidden");
+      closeIcon?.classList.remove("hidden");
+    }
+  });
+
+  // Mobile nav scroll buttons
+  document.querySelectorAll(".mobile-nav-link").forEach((button) => {
+    button.addEventListener("click", () => {
+      if (!(button instanceof HTMLElement)) return;
+      const target = button.dataset.scrollTo;
+      if (target) scrollToSection(target);
+    });
+  });
+
+  // Mobile accordion functionality
+  document.querySelectorAll(".mobile-accordion-toggle").forEach((button) => {
+    if (!(button instanceof HTMLElement)) return;
+    const accordionName = button.dataset.accordion;
+    const content = document.querySelector(
+      `[data-accordion-content="${accordionName}"]`,
+    );
+    const icon = button.querySelector(".accordion-icon");
+
+    button.addEventListener("click", () => {
+      const isOpen = !content?.classList.contains("hidden");
+
+      if (isOpen) {
+        content?.classList.add("hidden");
+        icon?.classList.remove("rotate-180");
+      } else {
+        content?.classList.remove("hidden");
+        icon?.classList.add("rotate-180");
+      }
+    });
+  });
+
+  // Close mobile menu when clicking dropdown links
+  document.querySelectorAll(".mobile-dropdown-link").forEach((link) => {
+    link.addEventListener("click", () => {
+      const mobileMenu = document.getElementById("mobile-menu");
+      const menuIcon = document.getElementById("menu-icon");
+      const closeIcon = document.getElementById("close-icon");
+      mobileMenu?.classList.add("hidden");
+      menuIcon?.classList.remove("hidden");
+      closeIcon?.classList.add("hidden");
+    });
+  });
+
+  // Mobile contact button - scroll to contact section
+  document
+    .getElementById("mobile-contact-button")
+    ?.addEventListener("click", () => {
+      scrollToSection("contact");
+    });
+</script>

@@ -1,0 +1,95 @@
+---
+import ProjectCard from "@/components/cards/ProjectCard.astro";
+import Heading from "@/components/common/Heading.astro";
+import NeuralLine from "@/components/background_animation/NeuralLine.astro";
+import BgGlow from "@/components/background_animation/BgGlow.astro";
+import { Button } from "@/components/interactive/ui/button";
+import { client } from "@/lib/sanity";
+import { urlFor } from "@/lib/image";
+import type { IProject } from "@/utils/types";
+
+// Fetch top 3 projects from Sanity
+let projects: IProject[] = [];
+try {
+  projects = await client.fetch<IProject[]>(
+    `*[_type == "project"] | order(order asc)[0...3] {
+    "id": slug.current,
+    title,
+    description,
+    category,
+    image,
+    technologies,
+    "results": results,
+    type
+  }`,
+  );
+} catch (error) {
+  console.error("Error fetching projects:", error);
+}
+---
+
+<!-- Projects Section -->
+<section id="projects" class="py-10 sm:py-20 relative overflow-hidden">
+  <!-- Background Elements -->
+  <BgGlow
+    variant="primary"
+    size="lg"
+    positionClass="top-1/4 left-0"
+    opacity={0.1}
+  />
+  <BgGlow
+    variant="secondary"
+    size="lg"
+    positionClass="bottom-1/4 right-0"
+    opacity={0.1}
+  />
+
+  <div class="container mx-auto relative z-10 flex flex-col gap-8 sm:gap-16">
+    <!-- Header -->
+    <Heading
+      section="Our Projects"
+      title="Transforming Industries with"
+      highlights="AI Innovation"
+      subtitle="Explore our portfolio of successful AI implementations across various industries, showcasing real-world impact and measurable results."
+    />
+
+    <div class="flex flex-col gap-8 sm:gap-12">
+      <!-- Projects Grid -->
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-8">
+        {
+          projects.length > 0 ? (
+            projects.map((project, index: number) => (
+              <ProjectCard
+                id={project.id}
+                image={
+                  project.image
+                    ? urlFor(project.image).url()
+                    : "https://placehold.co/600x400?text=Project"
+                }
+                title={project.title}
+                description={project.description}
+                category={project.category}
+                technologies={project.technologies || []}
+                results={project.results}
+                animationDelay={300 + index * 100}
+              />
+            ))
+          ) : (
+            <div class="col-span-full text-center py-20 text-muted-foreground">
+              <p>No projects found. Check back later!</p>
+            </div>
+          )
+        }
+      </div>
+      <div class="text-center" data-aos="fade-up" data-aos-delay="600">
+        <a href="/projects">
+          <Button variant="hero" size="lg" className="w-fit mx-auto"
+            >View All Projects</Button
+          >
+        </a>
+      </div>
+    </div>
+  </div>
+  <NeuralLine />
+</section>
+<!-- End Projects Section -->

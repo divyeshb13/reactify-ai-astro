@@ -1,0 +1,253 @@
+---
+export const prerender = true;
+
+import Layout from "@/layouts/Layout.astro";
+import BgGlow from "@/components/background_animation/BgGlow.astro";
+import FloatingGeometricShapesBg from "@/components/background_animation/FloatingGeometricShapesBg.astro";
+import FloatingParticlesBg from "@/components/background_animation/FloatingParticlesBg.astro";
+import Heading from "@/components/common/Heading.astro";
+import { Button } from "@/components/interactive/ui/button";
+import { Check, ArrowRight, Tag } from "lucide-react";
+import { client } from "@/lib/sanity";
+
+export async function getStaticPaths() {
+  const services = await client.fetch(
+    `*[_type == "service"] { "slug": slug.current }`,
+  );
+  return services.map((s: { slug: string }) => ({
+    params: { slug: s.slug },
+  }));
+}
+
+const { slug } = Astro.params;
+
+// Fetch service details from Sanity
+let service = null;
+try {
+  service = await client.fetch(
+    `*[_type == "service" && slug.current == $slug][0] {
+    title,
+    description,
+    overview,
+    features,
+    useCases,
+    pricing,
+    faqs
+  }`,
+    { slug },
+  );
+} catch (error) {
+  console.error("Error fetching service:", error);
+}
+
+// Redirect if not found
+if (!service) {
+  return Astro.redirect("/services");
+}
+---
+
+<Layout title={`${service.title} - ReactifyAI`}>
+  <div class="pt-20">
+    <section class="relative py-16 overflow-hidden">
+      <BgGlow
+        variant="primary"
+        size="lg"
+        positionClass="top-0 right-0"
+        opacity={0.08}
+      />
+
+      <div class="container mx-auto px-4 flex flex-col gap-8 sm:gap-16">
+        <!-- Hero Section -->
+        <div class="grid lg:grid-cols-12 items-center">
+          <div
+            class="lg:col-span-12 flex flex-col gap-6 sm:gap-14"
+            data-aos="fade-up"
+          >
+            <Heading
+              section="Service Details"
+              title=""
+              highlights={service.title}
+              subtitle={service.description}
+            />
+
+            <div class="flex flex-col gap-5 sm:gap-10">
+              <div
+                class="flex flex-wrap gap-2 sm:gap-3 items-center justify-center"
+              >
+                {
+                  (service.features || [])
+                    .slice(0, 6)
+                    .map((f: string, i: number) => (
+                      <span class="inline-flex items-center gap-1 sm:gap-2 bg-card border border-primary-foreground/10 text-foreground text-xs sm:text-sm px-3 py-2 rounded-full">
+                        <Check className="size-3 sm:size-4" /> {f}
+                      </span>
+                    ))
+                }
+              </div>
+
+              <div class="flex gap-3 justify-center">
+                <a href="/contact">
+                  <Button variant="hero">
+                    Get Started <ArrowRight size={18} />
+                  </Button>
+                </a>
+                <a href="/services">
+                  <Button variant="glass">All Services</Button>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="grid lg:grid-cols-12 gap-6 sm:gap-8 overflow-visible">
+          <!-- Left Column -->
+          <div class="lg:col-span-7 flex flex-col gap-4 sm:gap-6">
+            <!-- Overview -->
+            <div
+              class="rounded-2xl bg-card p-4 sm:p-6 flex flex-col gap-2 relative overflow-hidden"
+              data-aos="fade-up"
+            >
+              <FloatingGeometricShapesBg />
+              <h2
+                class="text-xl sm:text-2xl font-bold text-primary relative z-10"
+              >
+                Overview
+              </h2>
+              <p class="text-foreground leading-relaxed relative z-10">
+                {service.overview || service.description}
+              </p>
+            </div>
+
+            <!-- Use Cases -->
+            <div
+              class="rounded-2xl bg-card p-4 sm:p-6 flex flex-col gap-3"
+              data-aos="fade-up"
+              data-aos-delay="100"
+            >
+              <h3 class="text-xl font-semibold text-primary">Use Cases</h3>
+              <ul class="grid sm:grid-cols-2 gap-2 sm:gap-3">
+                {
+                  (service.useCases || []).map((u: string) => (
+                    <li class="flex items-start gap-2 sm:gap-3 p-2 sm:p-3 bg-background/40 rounded-md">
+                      <Tag className="size-3 sm:size-5 text-primary mt-1 shrink-0" />
+                      <div class="text-foreground font-medium">{u}</div>
+                    </li>
+                  ))
+                }
+              </ul>
+            </div>
+
+            <!-- FAQs -->
+            <div
+              class="rounded-2xl bg-card p-4 sm:p-6 flex flex-col gap-3 relative overflow-hidden"
+              data-aos="fade-up"
+              data-aos-delay="200"
+            >
+              <FloatingParticlesBg />
+              <h3 class="text-xl font-semibold text-primary relative z-10">
+                Frequently Asked Questions
+              </h3>
+              <div class="flex flex-col gap-2 sm:gap-3 relative z-10">
+                {
+                  (service.faqs || []).map((f: any, i: number) => (
+                    <details
+                      class="bg-background/30 p-2 sm:p-4 rounded-md flex flex-col gap-2 group"
+                      data-aos="fade-up"
+                      data-aos-delay={250 + i * 40}
+                    >
+                      <summary class="cursor-pointer font-medium list-none flex items-center justify-between">
+                        {f.q}
+                        <span class="rotate-0 group-open:rotate-180 transition-transform">
+                          ▼
+                        </span>
+                      </summary>
+                      <div class="mt-2 text-muted-foreground">{f.a}</div>
+                    </details>
+                  ))
+                }
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Column (Sidebar) -->
+          <aside class="lg:col-span-5 flex flex-col gap-4 sm:gap-6">
+            <!-- Pricing -->
+            <div
+              class="rounded-2xl p-4 sm:p-6 bg-card flex flex-col gap-4"
+              data-aos="fade-left"
+            >
+              <div class="flex flex-col gap-2">
+                <h4 class="text-lg font-semibold text-primary">Pricing</h4>
+                <div class="text-3xl font-extrabold">
+                  {service.pricing?.startingAt || "Contact Us"}
+                </div>
+                <div class="text-sm text-muted-foreground">
+                  Typical range: {service.pricing?.typicalRange || "Varies"}
+                </div>
+                <div class="text-sm text-muted-foreground">
+                  {service.pricing?.note}
+                </div>
+              </div>
+              <div>
+                <a href="/contact" class="block">
+                  <Button size="lg" variant="hero" className="w-full"
+                    >Request Quote</Button
+                  >
+                </a>
+              </div>
+            </div>
+
+            <!-- Related Features -->
+            <div
+              class="rounded-2xl p-6 bg-card flex flex-col sm:gap-4 gap-2.5 relative overflow-hidden"
+              data-aos="fade-left"
+              data-aos-delay="100"
+            >
+              <FloatingParticlesBg />
+              <h4 class="text-lg font-semibold text-primary relative z-10">
+                Related Features
+              </h4>
+              <div class="flex flex-col gap-1 sm:gap-2 relative z-10">
+                {
+                  (service.features || []).map((ft: string) => (
+                    <div class="flex items-center gap-2 sm:gap-3 text-foreground">
+                      <Check className="size-3 sm:size-4 shrink-0" />{" "}
+                      <span>{ft}</span>
+                    </div>
+                  ))
+                }
+              </div>
+            </div>
+
+            <!-- Ready to start -->
+            <div
+              class="rounded-2xl p-6 bg-gradient-to-r from-primary/5 to-secondary/5 border border-primary-foreground/10 text-foreground flex flex-col gap-4"
+              data-aos="fade-left"
+              data-aos-delay="200"
+            >
+              <div class="flex flex-col gap-2">
+                <h4 class="text-lg font-semibold text-primary">
+                  Ready to start?
+                </h4>
+                <p class="text-muted-foreground">
+                  Talk to our experts and get a tailored plan for {
+                    service.title
+                  }.
+                </p>
+              </div>
+              <div class="flex gap-3">
+                <a href="/contact">
+                  <Button variant="hero">Contact Us</Button>
+                </a>
+                <a href="/services">
+                  <Button variant="glass">Back</Button>
+                </a>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+  </div>
+</Layout>

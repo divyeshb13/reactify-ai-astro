@@ -1,0 +1,130 @@
+---
+import {
+  footerNavItems,
+  socialLinks as staticSocialLinks,
+} from "@/utils/const";
+import { client } from "@/lib/sanity";
+import { getIcon } from "@/utils/functions";
+import { Image } from "astro:assets";
+import type { ISocialLink } from "@/utils/types";
+
+const year = new Date().getFullYear();
+
+// Fetch social links from Sanity
+let socialLinks: ISocialLink[] = staticSocialLinks;
+try {
+  const data = await client.fetch<any[]>(
+    `*[_type == "social-link"] | order(order asc)`,
+  );
+  if (data && data.length > 0) {
+    socialLinks = data.map((item) => ({
+      icon: getIcon(item.icon),
+      href: item.href || "#",
+      label: item.label,
+    }));
+  }
+} catch (error) {
+  console.error("Error fetching social links:", error);
+}
+---
+
+<footer
+  class="bg-background/50 backdrop-blur-xl"
+  data-aos="fade-up"
+  data-aos-delay="300"
+>
+  <div class="container mx-auto pt-10 sm:pt-16 pb-8">
+    <div class="grid lg:grid-cols-2 gap-8 sm:gap-12 pb-5 sm:pb-8">
+      <!-- Brand Column -->
+      <div class="lg:col-span-1 flex flex-col sm:gap-6 gap-4">
+        <a
+          href="#"
+          class="flex items-center gap-1 cursor-pointer"
+          data-nav="home"
+        >
+          <Image
+            src="/images/logo.svg"
+            alt="Site Logo"
+            width={44}
+            height={44}
+            class="size-11"
+          />
+          <div>
+            <h3 class="text-xl sm:text-2xl font-bold text-primary">
+              ReactifyAI
+            </h3>
+            <p class="text-xs text-muted-foreground font-medium">
+              AI Solutions
+            </p>
+          </div>
+        </a>
+
+        <p class="text-muted-foreground leading-relaxed">
+          Leading the future of AI innovation with cutting-edge solutions that
+          transform businesses worldwide.
+        </p>
+
+        <div class="flex gap-4">
+          {
+            socialLinks.map((social, i) => {
+              const Icon = social.icon;
+              return (
+                <a
+                  href={social.href}
+                  aria-label={social.label}
+                  class="w-10 h-10 rounded-xl bg-secondary hover:bg-primary/10 flex items-center justify-center transition-all hover:scale-110 group"
+                >
+                  <Icon className="w-5 h-5 text-muted-foreground group-hover:text-primary" />
+                </a>
+              );
+            })
+          }
+        </div>
+      </div>
+
+      <!-- Quick Links -->
+      <div class="lg:col-span-1 flex flex-col gap-4 sm:gap-6">
+        <h4 class="font-semibold text-foreground">Quick Links</h4>
+        <ul class="grid grid-cols-3 gap-2 sm:gap-4">
+          {
+            footerNavItems.map((link) => (
+              <li>
+                <a
+                  href={link.to ?? "#"}
+                  class="text-foreground/80 hover:text-primary transition-colors cursor-pointer"
+                >
+                  {link.name}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+
+    <!-- Bottom -->
+    <div
+      class="border-t border-border pt-7 sm:pt-8 flex justify-center items-center gap-4"
+    >
+      <p class="text-muted-foreground text-sm">
+        Copyright (c) {year} ReactifyAI. All rights reserved.
+      </p>
+    </div>
+  </div>
+</footer>
+
+<!-- Small script replaces useNavScroll -->
+<script>
+  document.querySelectorAll("[data-nav]").forEach((el) => {
+    el.addEventListener("click", (e) => {
+      e.preventDefault();
+      const id = el.getAttribute("data-nav");
+      if (id) {
+        const section = document.getElementById(id);
+        if (section) {
+          section.scrollIntoView({ behavior: "smooth" });
+        }
+      }
+    });
+  });
+</script>

@@ -1,0 +1,367 @@
+/* ========== Google Font ========== */
+@import url("https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap");
+
+/* ========== tailwind ========== */
+@import "tailwindcss";
+
+/* ========== Font family ========== */
+* {
+  /* font-family: 'Plus Jakarta Sans', sans-serif; */
+  font-family: "Geist", sans-serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+}
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  --color-text: #000000;
+  --color-background: #faf4ff;
+  --color-foreground: #1e1b4b;
+  --color-card: #ffffff;
+  --color-toast: #f4f5ff;
+  --color-primary: #8d3bd4;
+  --color-primary-foreground: #000000;
+  --color-secondary: #f3f0ff;
+  --color-secondary-foreground: #4b5563;
+  --color-muted-foreground: #6b7280;
+  --color-accent: #ec4899;
+  --color-accent-foreground: #6a1a3f;
+  --color-destructive: #e11d48;
+  --color-destructive-foreground: #fff1f2;
+  --color-border: #e0e2f7;
+  --color-ring: #8b5cf6;
+  --color-gradiant-via: #c084fc;
+  --color-gradiant-from: #a78bfa;
+  --color-gradiant-to: #ec4899a3;
+
+  /* Gradients (light variants) */
+  --gradient-primary: linear-gradient(
+    90deg,
+    #a83bd4 0%,
+    #8d3bd4 25%,
+    #4e2994 50%,
+    #2b4394 75%,
+    #3d60d4 100%
+  );
+  --gradient-secondary: linear-gradient(135deg, #60a5fa, #a78bfa);
+  --gradient-grid:
+    linear-gradient(#7c3aed5d 1px, transparent 1px),
+    linear-gradient(90deg, #7c3aed5d 1px, transparent 1px);
+
+  /* Effects (light-friendly) */
+  --shadow-glass: 0 8px 40px #a78bfa2e;
+
+  /* Animations (same as dark) */
+  --animation-float: float 6s ease-in-out infinite;
+}
+
+.dark {
+  /* ========== Dark theme (applied when .dark is present) ==========
+       These are the original dark values moved here.
+    */
+
+  /* Base Colors */
+  --color-text: #ffffff;
+  --color-background: #080707;
+  --color-foreground: #9f9fa8;
+  --color-card: #17171b;
+  --color-toast: #1e2939;
+  --color-primary-foreground: #ffffff;
+  --color-secondary: #18181b;
+  --color-secondary-foreground: #101828;
+  --color-muted-foreground: #9f9fa8;
+  --color-accent: #f76497;
+  --color-accent-foreground: #8b0836;
+  --color-destructive: #d44949;
+  --color-destructive-foreground: #861043;
+  --color-border: #1d1d20;
+  --color-ring: #bc4cf7;
+  --color-gradiant-via: #c27aff;
+  --color-gradiant-from: #ad46ff;
+  --color-gradiant-to: #59168b;
+
+  /* Gradients (dark variants) */
+  --gradient-secondary: linear-gradient(135deg, #00aeff, #00ffff);
+  --gradient-grid:
+    linear-gradient(#ec489940 1px, transparent 1px),
+    linear-gradient(90deg, #ec489940 1px, transparent 1px);
+
+  /* Effects (dark) */
+  --shadow-glass: 0 8px 32px #a855f733;
+
+  /* Keep animations shared if you want; redefining is allowed */
+  --animation-float: float 6s ease-in-out infinite;
+}
+
+/* ========== theme ========== */
+@theme {
+  /* Base Colors */
+  --color-text: var(--color-text);
+  --color-background: var(--color-background);
+  --color-foreground: var(--color-foreground);
+  --color-card: var(--color-card);
+  --color-toast: var(--color-toast);
+  --color-primary: var(--color-primary);
+  --color-primary-foreground: var(--color-primary-foreground);
+  --color-secondary: var(--color-secondary);
+  --color-secondary-foreground: var(--color-secondary-foreground);
+  --color-muted-foreground: var(--color-muted-foreground);
+  --color-accent: var(--color-accent);
+  --color-accent-foreground: var(--color-accent-foreground);
+  --color-destructive: var(--color-destructive);
+  --color-destructive-foreground: var(--color-destructive-foreground);
+  --color-border: var(--color-border);
+  --color-ring: var(--color-ring);
+  --color-gradiant-via: var(--color-gradiant-via);
+  --color-gradiant-from: var(--color-gradiant-from);
+  --color-gradiant-to: var(--color-gradiant-to);
+
+  /* Gradients — make dynamic via var(...) */
+  --gradient-secondary: var(--gradient-secondary);
+  --gradient-primary: var(--gradient-primary);
+  --gradient-grid: var(--gradient-grid);
+
+  /* Effects — dynamic via var(...) */
+  --shadow-glass: var(--shadow-glass);
+
+  /* Transitions & Animations */
+  --animation-float: var(--animation-float);
+}
+
+/* BASE STYLES */
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-background text-text font-sans antialiased;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+}
+
+/* Container Layout */
+.container {
+  width: 100%;
+  max-width: 80rem;
+  margin-inline: auto;
+  padding-inline: 1rem;
+}
+
+@media (min-width: 640px) {
+  .container {
+    padding-inline: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .container {
+    padding-inline: 2rem;
+  }
+}
+
+/* COMPONENTS */
+@layer components {
+  /* Floating / Pulse Animations */
+  .floating {
+    animation: var(--animation-float);
+  }
+
+  /* Hover Border Effect */
+  .hover-border-1::before,
+  .hover-border-1::after {
+    width: 0%;
+    height: 0%;
+    opacity: 0;
+    transition:
+      width 0.2s linear,
+      height 0.15s 0.2s ease-out,
+      opacity 0s 0.35s !important;
+    z-index: 1;
+    content: "";
+    position: absolute;
+    border-radius: inherit;
+  }
+
+  .hover-border-1::before {
+    bottom: 0;
+    left: 0;
+    border-top: 1px solid var(--color-primary);
+    border-left: 1px solid var(--color-primary);
+  }
+
+  .hover-border-1::after {
+    top: 0;
+    right: 0;
+    border-bottom: 1px solid var(--color-primary);
+    border-right: 1px solid var(--color-primary);
+  }
+
+  .hover-border-1:hover::before,
+  .hover-border-1:hover::after,
+  .hover-border-1:active::before,
+  .hover-border-1:active::after {
+    width: 100%;
+    height: 100%;
+    opacity: 1;
+    transition:
+      width 0.2s 0.15s ease-out,
+      height 0.15s ease-in,
+      opacity 0s !important;
+  }
+
+  /* Card Glow Effect */
+  .card {
+    --start: 0;
+    --gradient: linear-gradient(
+      135deg,
+      #a855f7 0%,
+      #f76497 25%,
+      #00aeff 50%,
+      #895af6 100%
+    );
+    position: relative;
+  }
+
+  .card::before {
+    position: absolute;
+    content: "";
+    width: 100%;
+    height: 100%;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: inherit;
+    border: 2px solid transparent;
+    background: var(--gradient);
+    mask:
+      linear-gradient(#0000, #0000),
+      conic-gradient(
+        from calc((var(--start) - 22) * 1deg),
+        #ffffff1f 0deg,
+        #ffffff,
+        #ffffff00 100deg
+      );
+    mask-composite: intersect;
+    mask-clip: padding-box, border-box;
+    opacity: 0;
+    transition: 0.5s ease;
+  }
+
+  .card:hover::before,
+  .card.active::before {
+    opacity: 0.6;
+  }
+
+  .glow {
+    --start: inherit;
+    pointer-events: none;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    filter: blur(14px);
+    z-index: 0;
+  }
+
+  .glow::before {
+    position: absolute;
+    content: "";
+    width: 100%;
+    height: 100%;
+    left: -0%;
+    top: -0%;
+    border-radius: 14px;
+    border: 8px solid transparent;
+    background: var(--gradient);
+    mask:
+      linear-gradient(#0000, #0000),
+      conic-gradient(
+        from calc((var(--start) - 22) * 1deg),
+        #ffffff1f 0deg,
+        #ffffff,
+        #ffffff00 100deg
+      );
+    mask-composite: intersect;
+    mask-clip: padding-box, border-box;
+    opacity: 0;
+    transition: 1s ease;
+  }
+
+  .card:hover .glow::before,
+  .card.active .glow::before {
+    opacity: 1 !important;
+  }
+}
+
+/* UTILITIES */
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+/* ANIMATIONS */
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+
+  33% {
+    transform: translateY(-10px) rotate(1deg);
+  }
+
+  66% {
+    transform: translateY(-5px) rotate(-1deg);
+  }
+}
+
+@keyframes neural-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 20px #a855f74d;
+    transform: scale(1);
+  }
+
+  50% {
+    box-shadow: 0 0 60px #a855f799;
+    transform: scale(1.02);
+  }
+}
+
+@keyframes neural-scan {
+  from {
+    left: -100%;
+  }
+
+  to {
+    left: 100%;
+  }
+}
+
+@keyframes particle-float {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+
+  25% {
+    transform: translateY(-20px) translateX(10px);
+  }
+
+  50% {
+    transform: translateY(-10px) translateX(-5px);
+  }
+
+  75% {
+    transform: translateY(-25px) translateX(5px);
+  }
+}

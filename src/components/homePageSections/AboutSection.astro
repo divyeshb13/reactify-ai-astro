@@ -1,0 +1,128 @@
+---
+import { Badge } from "@/components/interactive/ui/badge";
+import { Shield } from "lucide-react";
+import { aboutAchievements, aboutFeatures } from "@/utils/const";
+import AboutCard1 from "@/components/cards/AboutCard1.astro";
+import AboutCard2 from "@/components/cards/AboutCard2.astro";
+import NeuralLine from "@/components/background_animation/NeuralLine.astro";
+import BgGlow from "@/components/background_animation/BgGlow.astro";
+import CardGradientBg from "@/components/background_animation/CardGradientBg.astro";
+import { Image } from "astro:assets";
+---
+
+<!-- About Section -->
+<section id="about" class="py-10 sm:py-20 relative overflow-hidden">
+  <!-- Background Elements -->
+  <BgGlow
+    variant="primary"
+    size="lg"
+    positionClass="top-1/4 right-0"
+    opacity={0.1}
+  />
+  <BgGlow
+    variant="secondary"
+    size="lg"
+    positionClass="bottom-1/4 left-0"
+    opacity={0.1}
+  />
+
+  <div class="container mx-auto relative z-10 flex flex-col gap-12 sm:gap-20">
+    <div class="grid lg:grid-cols-2 gap-10 sm:gap-16 items-center">
+      <!-- Content Column -->
+      <div class="flex flex-col gap-5 sm:gap-8">
+        <!-- About Title & Description -->
+        <div class="flex flex-col gap-4 sm:gap-6">
+          <Badge
+            variant="outline"
+            className="text-primary border-primary/30 w-fit mx-auto sm:mx-0"
+            data-aos="fade-right"
+          >
+            About ReactifyAI
+          </Badge>
+
+          <h2
+            class="text-4xl md:text-6xl font-bold leading-tight"
+            data-aos="fade-right"
+            data-aos-delay="100"
+          >
+            Leading the Future of{" "}
+            <CardGradientBg
+              className="bg-clip-text text-transparent text-nowrap"
+            >
+              AI Innovation
+            </CardGradientBg>
+          </h2>
+
+          <p
+            class="text-lg text-muted-foreground leading-relaxed"
+            data-aos="fade-right"
+            data-aos-delay="200"
+          >
+            At ReactifyAI, we're not just building AI solutions – we're crafting
+            the future. Since our founding, we've been at the forefront of
+            artificial intelligence, helping businesses transform their
+            operations and achieve unprecedented growth through intelligent
+            automation and data-driven insights.
+          </p>
+        </div>
+
+        <!-- Features List -->
+        <div class="flex flex-col gap-5 sm:gap-6">
+          {
+            aboutFeatures.map((feature, index) => (
+              <AboutCard1
+                icon={feature.icon}
+                title={feature.title}
+                description={feature.description}
+                animationDelay={300 + index * 100}
+              />
+            ))
+          }
+        </div>
+
+        <!-- Certification Badge -->
+        <div
+          class="relative flex items-center gap-3 text-sm text-muted-foreground bg-card/50 backdrop-blur-xl border border-primary-foreground/10 p-4 rounded-xl w-fit"
+          data-aos="fade-right"
+          data-aos-delay="600"
+        >
+          <Shield className="w-5 h-5 text-matrix" />
+          <span class="font-medium">
+            ISO 27001 Certified & GDPR Compliant
+          </span>
+        </div>
+      </div>
+
+      <!-- Visual Column -->
+      <div class="relative" data-aos="fade-left" data-aos-delay="400">
+        <div
+          class="bg-card/50 backdrop-blur-xl border border-primary-foreground/10 p-5 sm:p-8 rounded-3xl shadow-primary relative overflow-hidden"
+        >
+          <!-- Animated Visual Background -->
+          <Image
+            src={import.meta.env.PUBLIC_ABOUT_IMAGE}
+            alt="AI Technology Workspace"
+            width={800}
+            height={600}
+            class="w-full sm:h-96 object-cover rounded-2xl relative z-10"
+          />
+        </div>
+      </div>
+    </div>
+    <!-- Achievements Grid -->
+    <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-8">
+      {
+        aboutAchievements.map((achievement, index) => (
+          <AboutCard2
+            icon={achievement.icon}
+            value={achievement.value}
+            label={achievement.label}
+            description={achievement.description}
+          />
+        ))
+      }
+    </div>
+  </div>
+  <NeuralLine />
+</section>
+<!-- End About Section -->

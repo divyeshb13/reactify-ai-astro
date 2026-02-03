@@ -1,0 +1,50 @@
+---
+import type { CTACardProps } from "@/utils/types";
+import { ArrowRight } from "lucide-react";
+import { Button } from "@/components/interactive/ui/button";
+
+interface Props extends CTACardProps {}
+
+const {
+  title,
+  subtitle,
+  actions,
+  delay = 800,
+  className = "",
+  to,
+} = Astro.props;
+
+const href = to || "/contact";
+---
+
+<div
+  class={`text-center backdrop-blur-xl border overflow-hidden border-primary-foreground/10 p-6 relative sm:p-12 rounded-3xl flex flex-col gap-5 sm:gap-8 text-white ${className}`}
+  data-aos="fade-up"
+  data-aos-delay={delay}
+>
+  <div
+    class="z-0 bg-[image:var(--gradient-primary)] absolute top-0 left-0 bottom-0 w-full opacity-100 dark:opacity-20"
+  >
+  </div>
+  <div class="flex relative flex-col gap-2 sm:gap-4">
+    <div><h3 class="text-xl sm:text-2xl font-bold">{title}</h3></div>
+    {
+      subtitle && (
+        <p class="opacity-80 max-w-2xl mx-auto text-base sm:text-lg">
+          {subtitle}
+        </p>
+      )
+    }
+  </div>
+
+  <a {href}>
+    <Button
+      variant="hero"
+      size="lg"
+      className="text-xs sm:text-sm w-fit mx-auto relative z-[1]"
+    >
+      {actions}
+      <ArrowRight className="w-5 h-5" />
+    </Button>
+  </a>
+</div>

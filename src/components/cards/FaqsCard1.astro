@@ -1,0 +1,18 @@
+---
+import type { FAQCard1Props } from "@/utils/types";
+import FaqsCard1Interactive from "@/components/interactive/FaqsCard1Interactive";
+
+interface Props extends FAQCard1Props {
+  open?: boolean;
+  onToggle?: () => void;
+}
+
+const { question, answer, index, className = "" } = Astro.props;
+---
+
+<FaqsCard1Interactive
+  question={question}
+  answer={answer}
+  index={index}
+  className={className}
+/>

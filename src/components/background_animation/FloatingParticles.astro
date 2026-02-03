@@ -1,0 +1,50 @@
+---
+interface Props {
+  count?: number;
+  sizeClass?: string;
+  colorClass?: string;
+  animationClass?: string;
+  containerClass?: string;
+  style?: any;
+  randomizeAnimation?: boolean;
+}
+
+const {
+  count = 10,
+  sizeClass = "w-2 h-2",
+  colorClass = "bg-primary opacity-60",
+  animationClass = "animate-particle-float",
+  containerClass = "absolute inset-0 overflow-hidden pointer-events-none",
+  style,
+  randomizeAnimation = true,
+} = Astro.props;
+
+// Seeded random function for consistent server/client rendering
+const seededRandom = (seed: number) => {
+  const x = Math.sin(seed) * 10000;
+  return x - Math.floor(x);
+};
+
+const particles = Array.from({ length: count }).map((_, i) => {
+  const randomStyle = randomizeAnimation
+    ? {
+        left: `${seededRandom(i * 2) * 100}%`,
+        top: `${seededRandom(i * 2 + 1) * 100}%`,
+        animation: `float ${3 + seededRandom(i * 3) * 4}s ease-in-out infinite`,
+        animationDelay: `${seededRandom(i * 4) * 2}s`,
+      }
+    : {};
+  return { key: i, style: randomStyle };
+});
+---
+
+<div class={containerClass} style={style}>
+  {
+    particles.map((particle) => (
+      <div
+        class={`absolute rounded-full ${sizeClass} ${colorClass} ${animationClass}`}
+        style={particle.style}
+      />
+    ))
+  }
+</div>

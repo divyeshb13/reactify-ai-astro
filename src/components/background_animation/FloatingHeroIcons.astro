@@ -1,0 +1,39 @@
+---
+import { Zap, Cpu } from "lucide-react";
+
+interface IconConfig {
+  component: any;
+  className: string;
+  containerClass: string;
+  style?: any;
+}
+
+interface Props {
+  icons?: IconConfig[];
+}
+
+const defaultIcons: IconConfig[] = [
+  {
+    component: Zap,
+    className: "w-12 h-12 text-accent floating",
+    containerClass: "absolute top-1/3 right-20 opacity-20",
+    style: { animationDelay: "2s" },
+  },
+  {
+    component: Cpu,
+    className: "w-14 h-14 floating",
+    containerClass: "absolute bottom-1/4 left-1/4 opacity-20",
+    style: { animationDelay: "4s" },
+  },
+];
+
+const { icons = defaultIcons } = Astro.props;
+---
+
+{
+  icons.map((icon, idx) => (
+    <div class={icon.containerClass || ""} style={icon.style}>
+      <icon.component className={icon.className} style={icon.style} />
+    </div>
+  ))
+}

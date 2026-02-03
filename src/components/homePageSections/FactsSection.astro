@@ -1,0 +1,77 @@
+---
+import { facts as staticFacts } from "@/utils/const";
+import NeuralLine from "@/components/background_animation/NeuralLine.astro";
+import Heading from "@/components/common/Heading.astro";
+import FactsCard from "@/components/cards/FactsCard.astro";
+import BgGlow from "@/components/background_animation/BgGlow.astro";
+import { client } from "@/lib/sanity";
+import { getIcon } from "@/utils/functions";
+import type { IFact } from "@/utils/types";
+
+// Fetch facts from Sanity
+let facts: IFact[] = staticFacts;
+try {
+  const data = await client.fetch<any[]>(
+    `*[_type == "fact"] | order(_createdAt asc)`,
+  );
+  if (data && data.length > 0) {
+    facts = data.map((item) => ({
+      icon: getIcon(item.icon),
+      value: item.value,
+      label: item.label,
+      description: item.description,
+    }));
+  }
+} catch (error) {
+  console.error("Error fetching facts:", error);
+}
+
+const displayedFacts = facts;
+---
+
+<!-- Facts Section -->
+<section id="facts" class="py-10 sm:py-20 relative overflow-hidden">
+  <!-- Background Elements -->
+  <BgGlow
+    variant="primary"
+    size="lg"
+    positionClass="top-0 left-1/4"
+    opacity={0.1}
+  />
+  <BgGlow
+    variant="secondary"
+    size="lg"
+    positionClass="bottom-0 right-1/4"
+    opacity={0.1}
+  />
+
+  <div class="container mx-auto relative z-10 flex flex-col gap-8 sm:gap-16">
+    <!-- Header -->
+    <Heading
+      section="Our Impact"
+      title="Numbers That Speak for"
+      highlights="Our Excellence"
+      subtitle="Since our inception, we've been dedicated to delivering exceptional AI solutions that drive real business results and create lasting value for our clients worldwide."
+    />
+
+    <div class="flex flex-col gap-10 sm:gap-12">
+      <!-- Facts Grid -->
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-8">
+        {
+          displayedFacts.map((fact, index) => (
+            <FactsCard
+              icon={fact.icon}
+              value={fact.value}
+              label={fact.label}
+              description={fact.description}
+              index={index}
+            />
+          ))
+        }
+      </div>
+      <!-- End Facts Grid -->
+    </div>
+  </div>
+  <NeuralLine />
+</section>
+<!-- End Facts Section -->

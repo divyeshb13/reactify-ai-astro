@@ -1,0 +1,67 @@
+---
+import "@/styles/global.css";
+import "react-toastify/dist/ReactToastify.css";
+import "aos/dist/aos.css";
+import "lenis/dist/lenis.css";
+import Header from "@/components/Header.astro";
+import Footer from "@/components/Footer.astro";
+
+import BackToTop from "@/components/common/BackToTop.astro";
+import ThemedToastContainer from "@/components/interactive/common/ThemedToastContainer";
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = "ReactifyAI - AI Startup & Tech Innovation",
+  description = "ReactifyAI is a modern AI Startup & Tech Innovation React Template designed for AI companies, tech startups, and data-driven businesses. Built with clean code, responsive design, and sleek animations.",
+} = Astro.props;
+---
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="/images/favicon.svg" />
+    <link rel="apple-touch-icon" href="/images/favicon.png" />
+
+    <title>{title}</title>
+
+    <meta name="description" content={description} />
+    <meta name="author" content="ReactifyAI" />
+    <meta
+      name="keywords"
+      content="AI, Tech Innovation, artificial intelligence, machine learning, automation, data analytics, business transformation"
+    />
+
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+
+    <!-- Theme Script - Runs IMMEDIATELY before page renders to prevent flash -->
+    <script is:inline src="/js/theme.js"></script>
+  </head>
+
+  <body class="min-h-screen bg-background text-sm sm:text-base">
+    <!-- Toast Notifications (React Island) -->
+    <ThemedToastContainer client:load />
+
+    <!-- Header -->
+    <Header />
+
+    <!-- Page Content -->
+    <main>
+      <slot />
+    </main>
+
+    <!-- Footer -->
+    <Footer />
+
+    <!-- Back To Top Button (Astro Component) -->
+    <BackToTop />
+    <script>
+      import "../scripts/layout";
+    </script>
+  </body>
+</html>

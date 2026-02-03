@@ -1,0 +1,48 @@
+---
+interface Props {
+  className?: string;
+  hover?: boolean;
+  gradientClass?: string;
+  gridOpacity?: number;
+}
+
+const {
+  className = "",
+  hover = false,
+  gradientClass = "bg-[image:var(--gradient-primary)]",
+  gridOpacity = 0.15,
+} = Astro.props;
+
+// Check if there's content in the default slot
+const hasSlot = Astro.slots.has("default");
+---
+
+{
+  hasSlot ? (
+    <span class={`${gradientClass} ${className} bg-clip-text text-transparent`}>
+      <slot />
+    </span>
+  ) : (
+    <>
+      <!-- Gradient background, appears on hover if enabled -->
+      <div
+        class={`absolute inset-0 ${gradientClass} pointer-events-none transition-opacity duration-500 ${
+          hover ? "opacity-0 group-hover:opacity-10" : ""
+        } ${className}`}
+      />
+      <!-- Grid pattern overlay -->
+      <div
+        class="absolute inset-0 pointer-events-none"
+        style={{ opacity: gridOpacity }}
+      >
+        <div
+          style={{
+            backgroundImage: `var(--gradient-grid)`,
+            backgroundSize: "15px 15px",
+          }}
+          class="w-full h-full"
+        />
+      </div>
+    </>
+  )
+}

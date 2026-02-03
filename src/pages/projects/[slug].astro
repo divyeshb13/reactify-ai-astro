@@ -1,0 +1,243 @@
+---
+export const prerender = true;
+
+import Layout from "@/layouts/Layout.astro";
+import BgGlow from "@/components/background_animation/BgGlow.astro";
+import FloatingGeometricShapesBg from "@/components/background_animation/FloatingGeometricShapesBg.astro";
+import FloatingParticlesBg from "@/components/background_animation/FloatingParticlesBg.astro";
+import { Badge } from "@/components/interactive/ui/badge";
+import { Button } from "@/components/interactive/ui/button";
+import { ExternalLink } from "lucide-react";
+import { client } from "@/lib/sanity";
+import { urlFor } from "@/lib/image";
+import { Image } from "astro:assets";
+import type { IProject } from "@/utils/types";
+
+export async function getStaticPaths() {
+  const projects = await client.fetch(
+    `*[_type == "project"] { "slug": slug.current }`,
+  );
+  return projects.map((p: { slug: string }) => ({
+    params: { slug: p.slug },
+  }));
+}
+
+const { slug } = Astro.params;
+
+// Fetch project details from Sanity
+let project: IProject | null = null;
+try {
+  project = await client.fetch<IProject>(
+    `*[_type == "project" && slug.current == $slug][0] {
+    title,
+    description,
+    category,
+    image,
+    technologies,
+    "summaryResult": results,
+    type,
+    detail
+  }`,
+    { slug },
+  );
+} catch (error) {
+  console.error("Error fetching project:", error);
+}
+
+// Redirect if not found
+if (!project) {
+  return Astro.redirect("/projects");
+}
+---
+
+<Layout title={`${project.title} - ReactifyAI`}>
+  <div class="pt-20">
+    <section class="relative py-16 overflow-hidden">
+      <BgGlow
+        variant="secondary"
+        size="lg"
+        positionClass="top-0 left-0"
+        opacity={0.1}
+      />
+
+      <div class="container mx-auto px-4 gap-8 sm:gap-16 flex flex-col">
+        <!-- Header -->
+        <div class="grid lg:grid-cols-12 items-center">
+          <header class="lg:col-span-8" data-aos="fade-up">
+            <div class="flex flex-col gap-8 sm:gap-14">
+              <div class="flex flex-col gap-6 sm:gap-8">
+                <Badge
+                  variant="outline"
+                  className="text-primary border-primary/30 w-fit"
+                  data-aos="fade-up"
+                >
+                  Project
+                </Badge>
+
+                <div class="flex flex-col gap-3 sm:gap-5">
+                  <h1
+                    class="text-4xl lg:text-5xl font-extrabold bg-[image:var(--gradient-primary)] bg-clip-text text-transparent"
+                  >
+                    {project.title}
+                  </h1>
+                  <p class="text-lg text-muted-foreground max-w-3xl">
+                    {project.description}
+                  </p>
+                </div>
+              </div>
+
+              <section
+                aria-labelledby="tech-heading"
+                class="flex flex-col sm:gap-10 gap-5"
+              >
+                <h2 id="tech-heading" class="sr-only">Technologies used</h2>
+                <ul class="flex flex-wrap sm:gap-3 gap-2 list-none p-0 m-0">
+                  {
+                    (project.technologies || [])
+                      .slice(0, 8)
+                      .map((t: string) => (
+                        <li>
+                          <span class="inline-flex items-center gap-2 bg-card border border-secondary-foreground/10 text-foreground text-sm px-3 py-2 rounded-md">
+                            {t}
+                          </span>
+                        </li>
+                      ))
+                  }
+                </ul>
+
+                <footer class="flex items-center justify-between gap-3 w-full">
+                  <div class="flex gap-3">
+                    <a href="/contact">
+                      <Button variant="hero">
+                        Start Project <ExternalLink size={18} />
+                      </Button>
+                    </a>
+                    <a href="/projects">
+                      <Button variant="glass">All Projects</Button>
+                    </a>
+                  </div>
+                </footer>
+              </section>
+            </div>
+          </header>
+        </div>
+
+        <!-- Main Content -->
+        <div class="grid lg:grid-cols-12 gap-8">
+          <!-- Left Column -->
+          <div class="lg:col-span-7 flex flex-col gap-6">
+            <!-- Overview -->
+            <div
+              class="rounded-2xl bg-card sm:p-6 p-4 relative overflow-hidden"
+              data-aos="fade-up"
+            >
+              <FloatingGeometricShapesBg />
+              <div class="flex flex-col gap-2 relative z-10">
+                <h2 class="text-2xl font-bold">Overview</h2>
+                <p class="text-foreground leading-relaxed">
+                  {project.description}
+                </p>
+              </div>
+            </div>
+
+            <!-- Tech & Tools -->
+            <div
+              class="rounded-2xl bg-card sm:p-6 p-4"
+              data-aos="fade-up"
+              data-aos-delay="100"
+            >
+              <div class="flex flex-col gap-3">
+                <h3 class="text-xl font-semibold">Technologies & Tools</h3>
+                <div class="flex flex-wrap gap-3">
+                  {
+                    (project.technologies || []).map((tech: string) => (
+                      <Badge variant="outline" className="bg-background">
+                        {tech}
+                      </Badge>
+                    ))
+                  }
+                </div>
+              </div>
+            </div>
+
+            <!-- Results & Impact -->
+            <div
+              class="rounded-2xl bg-card sm:p-6 p-4 relative overflow-hidden"
+              data-aos="fade-up"
+              data-aos-delay="200"
+            >
+              <FloatingParticlesBg />
+              <div class="flex flex-col gap-3 relative z-10">
+                <h3 class="text-xl font-semibold">Results & Impact</h3>
+                <div class="flex flex-col gap-2">
+                  {
+                    project.detail && Array.isArray(project.detail.results)
+                      ? project.detail.results.map((r: string) => (
+                          <div class="p-3 bg-background/30 rounded-md">{r}</div>
+                        ))
+                      : project.summaryResult
+                        ? project.summaryResult
+                            .split(",")
+                            .map((r: string) => (
+                              <div class="p-3 bg-background/30 rounded-md">
+                                {r.trim()}
+                              </div>
+                            ))
+                        : null
+                  }
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Column (Sidebar) -->
+          <aside class="lg:col-span-5 flex flex-col gap-6">
+            <!-- Case Study Image Card -->
+            <div class="rounded-2xl sm:p-6 p-4 bg-card" data-aos="fade-left">
+              {
+                project.image && (
+                  <Image
+                    src={urlFor(project.image).url()}
+                    alt={project.title}
+                    width={800}
+                    height={400}
+                    class="w-full h-48 object-cover rounded-md mb-4"
+                  />
+                )
+              }
+              <h4 class="text-lg font-semibold mb-2">Case Study</h4>
+              <p class="text-muted-foreground">
+                A short summary of the project's goals, approach and outcome.
+              </p>
+              <div class="mt-4">
+                <a href="/contact">
+                  <Button variant="hero">Get in Touch</Button>
+                </a>
+              </div>
+            </div>
+
+            <!-- Ready to build -->
+            <div
+              class="rounded-2xl sm:p-6 p-4 bg-gradient-to-r from-primary/5 to-secondary/5 border border-primary-foreground/10 text-foreground"
+              data-aos="fade-left"
+              data-aos-delay="100"
+            >
+              <h4 class="text-lg font-semibold mb-2">Ready to build?</h4>
+              <p class="text-muted-foreground mb-4">
+                Let's turn your idea into a polished product.
+              </p>
+              <div class="flex gap-3">
+                <a href="/contact">
+                  <Button variant="hero">Contact Us</Button>
+                </a>
+                <a href="/projects">
+                  <Button variant="glass">Back</Button>
+                </a>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+  </div>
+</Layout>

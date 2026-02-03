@@ -1,0 +1,26 @@
+---
+interface Props {
+  opacity?: number;
+  className?: string;
+}
+
+const { opacity = 0.3, className = "" } = Astro.props;
+---
+
+<div
+  class={`absolute inset-0 pointer-events-none transition-opacity duration-500 z-11 ${className}`}
+  style={{ opacity }}
+>
+  <div
+    class="absolute top-0 sm:right-10 w-32 h-32 bg-gradient-to-bl from-gradiant-from/40 to-transparent rounded-full -translate-y-16 translate-x-16 group-hover:rotate-12 transition-transform duration-700"
+  >
+  </div>
+  <div
+    class="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-tr from-primary/40 to-transparent rounded-full translate-y-12 -translate-x-12 group-hover:-rotate-12 transition-transform duration-700"
+  >
+  </div>
+  <div
+    class="absolute top-1/2 left-1/4 w-16 h-16 bg-gradient-to-r from-primary/30 to-transparent rounded-full group-hover:scale-110 transition-transform duration-700"
+  >
+  </div>
+</div>

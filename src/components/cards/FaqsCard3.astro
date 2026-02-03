@@ -1,0 +1,67 @@
+---
+import { client } from "@/lib/sanity";
+import { contactInfo } from "@/utils/const";
+
+let contactData = {
+  email: contactInfo[0].value,
+  phone: contactInfo[1].value,
+};
+
+try {
+  const data = await client.fetch(`*[_type == "contact"]`);
+  if (data && Array.isArray(data)) {
+    const emailItem = data.find(
+      (item: any) =>
+        item.icon === "Mail" || item.label?.toLowerCase().includes("email"),
+    );
+    const phoneItem = data.find(
+      (item: any) =>
+        item.icon === "Phone" ||
+        item.label?.toLowerCase().includes("phone") ||
+        item.label?.toLowerCase().includes("call"),
+    );
+
+    if (emailItem) contactData.email = emailItem.value;
+    if (phoneItem) contactData.phone = phoneItem.value;
+  }
+} catch (error) {
+  console.error("Error fetching contact info (FaqsCard3):", error);
+}
+---
+
+<div
+  class="bg-card/50 backdrop-blur-xl border border-gradiant-via/30 rounded-2xl p-5 sm:p-8 relative overflow-hidden group"
+>
+  <!-- Content -->
+  <h4
+    class="text-lg sm:text-xl font-semibold bg-primary bg-clip-text text-transparent mb-4 z-10 relative"
+  >
+    Need Immediate Assistance?
+  </h4>
+  <div class="flex flex-col gap-2 z-10 relative">
+    <div class="flex items-center gap-3">
+      <div class="w-3 h-3 rounded-full bg-muted-foreground mr-2"></div>
+      <span class="text-sm text-muted-foreground">
+        Email: <span class="text-primary-foreground font-semibold"
+          >{contactData.email}</span
+        >
+      </span>
+    </div>
+    <div class="flex items-center gap-3">
+      <div class="w-3 h-3 rounded-full bg-muted-foreground mr-2"></div>
+      <span class="text-sm text-muted-foreground">
+        Phone: <span class="text-primary-foreground font-semibold"
+          >{contactData.phone}</span
+        >
+      </span>
+    </div>
+    <div class="flex items-center gap-3">
+      <div class="w-3 h-3 rounded-full bg-muted-foreground mr-2"></div>
+      <span class="text-sm text-muted-foreground">
+        Available: <span class="text-primary-foreground font-semibold"
+          >24/7 Support</span
+        >
+      </span>
+    </div>
+  </div>
+</div>

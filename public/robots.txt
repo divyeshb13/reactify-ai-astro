@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://reactify-ai-astro.vercel.app/sitemap-index.xml

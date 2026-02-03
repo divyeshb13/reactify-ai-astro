@@ -1,0 +1,80 @@
+---
+import { Badge } from "@/components/interactive/ui/badge";
+
+const stats = [
+	{
+		iconSvg: '<path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/>',
+		value: "500+",
+		label: "Projects Completed",
+		description: "Successfully delivered AI solutions across various industries"
+	},
+	{
+		iconSvg: '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>',
+		value: "200+",
+		label: "Happy Clients",
+		description: "Businesses transformed through our AI solutions"
+	},
+	{
+		iconSvg: '<circle cx="12" cy="12" r="10"/><line x1="2" x2="22" y1="12" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>',
+		value: "50+",
+		label: "Countries Served",
+		description: "Global reach with local expertise and support"
+	},
+	{
+		iconSvg: '<circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/>',
+		value: "99%",
+		label: "Success Rate",
+		description: "Track record of successful AI implementations"
+	}
+];
+---
+
+<section class="py-10 sm:py-20 relative overflow-hidden">
+	<div class="container mx-auto">
+		<!-- Header -->
+		<div class="text-center mb-16">
+			<Badge variant="outline" className="mb-6 text-primary border-primary/30">
+				Our Impact
+			</Badge>
+
+			<h2 class="text-4xl md:text-5xl font-bold mb-6">
+				Numbers That Speak for{" "}
+				<span class="bg-primary bg-clip-text text-transparent">Our Excellence</span>
+			</h2>
+
+			<p class="text-lg text-muted-foreground max-w-3xl mx-auto">
+				Since our inception, we've been dedicated to delivering exceptional AI solutions
+				that drive real business results and create lasting value for our clients.
+			</p>
+		</div>
+
+		<!-- Stats Grid -->
+		<div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+			{stats.map((stat, index) => (
+				<div class="bg-card/50 backdrop-blur-xl border border-primary-foreground/10 shadow-[var(--shadow-glass)] p-8 rounded-2xl text-center hover:scale-105 transition-all duration-300 group">
+					<!-- Icon -->
+					<div class="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform">
+						<svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={stat.iconSvg} />
+					</div>
+
+					<!-- Value -->
+					<div class="text-4xl md:text-5xl font-bold bg-primary bg-clip-text text-transparent mb-2">
+						{stat.value}
+					</div>
+
+					<!-- Label -->
+					<h3 class="text-xl font-semibold mb-3">{stat.label}</h3>
+
+					<!-- Description -->
+					<p class="text-muted-foreground text-sm leading-relaxed">
+						{stat.description}
+					</p>
+				</div>
+			))}
+		</div>
+	</div>
+
+	<!-- Background Elements -->
+	<div class="absolute top-1/4 left-0 w-32 h-32 bg-primary/5 rounded-full blur-3xl" />
+	<div class="absolute bottom-1/4 right-0 w-40 h-40 bg-accent/5 rounded-full blur-3xl" />
+</section>

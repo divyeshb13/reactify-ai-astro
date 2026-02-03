@@ -1,0 +1,198 @@
+---
+export const prerender = true;
+
+import Layout from "@/layouts/Layout.astro";
+import BgGlow from "@/components/background_animation/BgGlow.astro";
+import { Badge } from "@/components/interactive/ui/badge";
+import { Calendar, User, Clock, ArrowRight } from "lucide-react";
+import { Button } from "@/components/interactive/ui/button";
+import { client } from "@/lib/sanity";
+import { urlFor } from "@/lib/image";
+import { Image } from "astro:assets";
+import type { IBlogPostDetail } from "@/utils/types";
+
+export async function getStaticPaths() {
+  const posts = await client.fetch(
+    `*[_type == "blog"] { "slug": slug.current }`,
+  );
+  return posts.map((post: { slug: string }) => ({
+    params: { slug: post.slug },
+  }));
+}
+
+const { slug } = Astro.params;
+
+// Fetch blog post from Sanity
+let blogMeta: IBlogPostDetail | null = null;
+try {
+  const query = `*[_type == "blog" && slug.current == $slug][0] {
+    _createdAt,
+    title,
+    category,
+    author, 
+    readTime,
+    mainImage,
+    image,
+    excerpt,
+    content, 
+    detail,
+    extra
+  }`;
+  blogMeta = await client.fetch<IBlogPostDetail>(query, { slug });
+} catch (error) {
+  console.error("Error fetching blog post:", error);
+}
+
+if (blogMeta) {
+  // Date formatting
+  if (blogMeta._createdAt) {
+    blogMeta._createdAt = new Date(blogMeta._createdAt).toLocaleDateString(
+      "en-US",
+      {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      },
+    );
+  }
+}
+
+// Redirect if not found
+if (!blogMeta) {
+  return Astro.redirect("/404");
+}
+---
+
+<Layout title={`${blogMeta.title} - ReactifyAI`}>
+  <div class="pt-20">
+    <section class="relative py-16 overflow-hidden">
+      <BgGlow
+        variant="primary"
+        size="lg"
+        positionClass="top-0 right-0"
+        opacity={0.08}
+      />
+
+      <div class="container mx-auto px-4 flex flex-col gap-8 sm:gap-14">
+        <!-- Blog Main Content -->
+        <article class="max-w-4xl mx-auto flex flex-col gap-8 sm:gap-14">
+          <!-- Post Header -->
+          <div class="text-center flex flex-col gap-4 sm:gap-6">
+            <div class="flex flex-col gap-4 items-center">
+              <!-- Badge -->
+              <Badge
+                className="inline-flex items-center rounded-full dark:bg-black bg-white border px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold text-primary border-primary/30 w-fit"
+                data-aos="zoom-in"
+                data-aos-delay="120"
+              >
+                {blogMeta.category}
+              </Badge>
+
+              <!-- Title -->
+              <h1
+                class="text-4xl md:text-6xl font-bold leading-tight"
+                data-aos="fade-up"
+                data-aos-delay="150"
+              >
+                {blogMeta.title}
+              </h1>
+
+              <div
+                class="flex flex-wrap items-center justify-center gap-3 sm:gap-6 text-sm text-muted-foreground"
+                data-aos="fade-up"
+                data-aos-delay="200"
+              >
+                <div class="flex items-center gap-1 sm:gap-2">
+                  <User size={16} />
+                  <span>{blogMeta.author}</span>
+                </div>
+                <div class="flex items-center gap-1 sm:gap-2">
+                  <Calendar size={16} />
+                  <span>{blogMeta._createdAt}</span>
+                </div>
+                <div class="flex items-center gap-1 sm:gap-2">
+                  <Clock size={16} />
+                  <span>{blogMeta.readTime || "5 min read"}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Post Image -->
+          <div
+            class="relative rounded-3xl overflow-hidden shadow-2xl"
+            data-aos="fade-up"
+            data-aos-delay="300"
+          >
+            <div
+              class="absolute inset-0 bg-gradient-to-t from-background/20 to-transparent z-10"
+            >
+            </div>
+            <Image
+              src={blogMeta.mainImage
+                ? urlFor(blogMeta.mainImage).url()
+                : urlFor(blogMeta.image).url()}
+              alt={blogMeta.title}
+              width={1200}
+              height={600}
+              class="w-full h-auto object-cover"
+            />
+          </div>
+
+          <!-- Post body content -->
+          <div
+            class="flex flex-col gap-6 sm:gap-8 text-lg text-muted-foreground leading-relaxed"
+            data-aos="fade-up"
+          >
+            <!-- Content -->
+            <p class="text-foreground font-medium text-xl sm:text-2xl italic">
+              {blogMeta.excerpt}
+            </p>
+
+            <div class="prose prose-invert max-w-none">
+              {blogMeta.detail || "Content coming soon..."}
+            </div>
+
+            <!-- Tags/Extra if available -->
+            {
+              blogMeta.extra?.tags && (
+                <div class="flex flex-wrap gap-2 mt-8">
+                  {blogMeta.extra.tags.map((tag) => (
+                    <span class="px-3 py-1 bg-secondary text-primary rounded-full text-sm">
+                      #{tag}
+                    </span>
+                  ))}
+                </div>
+              )
+            }
+          </div>
+
+          <!-- Bottom CTA or Navigation -->
+          <div
+            class="flex flex-col sm:flex-row items-center justify-between gap-6 py-10 border-t border-primary-foreground/10"
+            data-aos="fade-up"
+          >
+            <div class="flex flex-col gap-2 text-center sm:text-left">
+              <h4 class="text-xl font-bold">Enjoyed the article?</h4>
+              <p class="text-muted-foreground">
+                Share this knowledge with your network and stay updated.
+              </p>
+            </div>
+
+            <div class="flex gap-4">
+              <a href="/blog">
+                <Button variant="glass" className="gap-2">
+                  <ArrowRight size={18} className="rotate-180" />
+                  All Articles
+                </Button>
+              </a>
+              <a href="/contact">
+                <Button variant="hero">Subscribe Now</Button>
+              </a>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+  </div>
+</Layout>

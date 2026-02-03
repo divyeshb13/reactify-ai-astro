@@ -1,0 +1,32 @@
+---
+interface Props {
+  variant?: "pulse" | "ping" | "none";
+  size?: string; // tailwind size classes e.g. "w-2 h-2"
+  colorClass?: string; // tailwind color class e.g. "bg-primary-foreground/20"
+  roundedClass?: string; // e.g. "rounded-full"
+  className?: string;
+  style?: any;
+}
+
+const {
+  variant = "pulse",
+  size = "w-2 h-2",
+  colorClass = "bg-primary-foreground/20",
+  roundedClass = "rounded-full",
+  className = "",
+  style,
+} = Astro.props;
+
+const animClass =
+  variant === "pulse"
+    ? "animate-pulse"
+    : variant === "ping"
+      ? "animate-ping"
+      : "";
+---
+
+<div
+  class={`absolute ${size} ${colorClass} ${roundedClass} ${animClass} ${className}`}
+  style={style}
+>
+</div>

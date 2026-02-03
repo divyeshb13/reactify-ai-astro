@@ -1,0 +1,43 @@
+---
+import type { ProcessCardProps } from "@/utils/types";
+import ProcessCardInteractive from "@/components/interactive/ProcessCardInteractive";
+
+interface Props extends ProcessCardProps {}
+
+const {
+  index,
+  processSteps,
+  icon: Icon,
+  title,
+  description,
+  className = "",
+} = Astro.props;
+---
+
+<ProcessCardInteractive index={index} className={className}>
+  <div class="glow"></div>
+  {
+    index < processSteps.length - 1 && (
+      <div class="hidden lg:block absolute top-16 left-full w-full h-0.5 bg-gradient-to-r from-primary/50 to-transparent z-0" />
+    )
+  }
+
+  <div
+    class="bg-card/50 backdrop-blur-xl border border-primary-foreground/10 p-5 sm:p-8 rounded-2xl hover:scale-105 transition-all duration-300 relative z-10 flex flex-col gap-2.5 sm:gap-4 grow"
+  >
+    <div
+      class="size-8 sm:size-12 rounded-xl bg-primary/10 flex items-center justify-center mx-auto"
+    >
+      <Icon className="size-4 sm:size-6 text-primary" />
+    </div>
+
+    <div class="flex flex-col gap-1.5 sm:gap-2 text-center">
+      <h3 class="text-lg w-full sm:text-xl font-bold">
+        {title}
+      </h3>
+      <p class="text-muted-foreground leading-relaxed grow">
+        {description}
+      </p>
+    </div>
+  </div>
+</ProcessCardInteractive>

@@ -1,0 +1,104 @@
+---
+export const prerender = true;
+import Layout from "@/layouts/Layout.astro";
+import Heading from "@/components/common/Heading.astro";
+import ContactForm from "@/components/interactive/forms/ContactForm";
+import BgGlow from "@/components/background_animation/BgGlow.astro";
+import CardGradientBg from "@/components/background_animation/CardGradientBg.astro";
+import NeuralLine from "@/components/background_animation/NeuralLine.astro";
+import { contactInfo as staticContactInfo } from "@/utils/const";
+import { client } from "@/lib/sanity";
+import { getIcon } from "@/utils/functions";
+import type { IContactInfo } from "@/utils/types";
+
+// Fetch contact info from Sanity
+let contactInfo = staticContactInfo;
+try {
+  const data = await client.fetch<IContactInfo[]>(`*[_type == "contact"]`);
+  if (data && data.length > 0) {
+    contactInfo = data.map((item) => ({
+      icon: getIcon(item.icon),
+      label: item.label,
+      value: item.value,
+      href: item.href,
+    }));
+  }
+} catch (error) {
+  console.error("Error fetching contact info:", error);
+}
+
+const title = "Contact Us - ReactifyAI";
+---
+
+<Layout title={title}>
+  <main
+    class="relative min-h-screen overflow-hidden py-10 sm:py-20 sm:pt-40 pt-32"
+  >
+    <!-- Background Elements -->
+    <CardGradientBg className="absolute inset-0 opacity-8" gridOpacity={0} />
+    <BgGlow
+      variant="primary"
+      size="lg"
+      positionClass="top-[-10%] right-[-10%]"
+      opacity={0.08}
+    />
+    <BgGlow
+      variant="secondary"
+      size="lg"
+      positionClass="bottom-[-10%] left-[-10%]"
+      opacity={0.1}
+    />
+    <NeuralLine />
+
+    <div class="container mx-auto flex flex-col gap-8 sm:gap-16 relative">
+      <!-- Header -->
+      <Heading
+        section="Contact Us"
+        title="Let's build something "
+        highlights="remarkable"
+        subtitle="Share your vision and we'll help you scale it with AI. Use the form to message us directly or pick a quick contact method."
+      />
+
+      <section class="relative flex justify-center">
+        <div class="w-full max-w-4xl mx-auto">
+          <!-- Floating contact links panel (absolute, above form) -->
+          <div class="relative">
+            <div
+              class="absolute left-1/2 transform -translate-x-1/2 -translate-y-13 z-20 w-full max-w-3xl"
+            >
+              <div
+                class="flex items-center justify-center gap-5 bg-card/75 backdrop-blur-md border border-primary-foreground/10 rounded-full px-3 py-2 sm:px-5 sm:py-4 shadow-sm"
+              >
+                {
+                  contactInfo.map((info, idx) => (
+                    <a
+                      href={info.href}
+                      class="flex items-center gap-2 p-2 sm:py-3 sm:px-7 border-primary-foreground/10 hover:translate-y-[-2px] hover:scale-[1.01] transition-transform"
+                    >
+                      <div class="size-8 sm:size-10 rounded-full bg-primary/10 flex items-center justify-center">
+                        <info.icon className="size-4 sm:size-5 text-primary" />
+                      </div>
+                      <div class="text-left hidden sm:block">
+                        <div class="text-primary-foreground text-sm whitespace-nowrap">
+                          {info.label}
+                        </div>
+                        <div class="font-semibold text-muted-foreground text-xs whitespace-nowrap">
+                          {info.value}
+                        </div>
+                      </div>
+                    </a>
+                  ))
+                }
+              </div>
+            </div>
+
+            <!-- Contact Form (React Component) -->
+            <div class="mt-14">
+              <ContactForm client:only="react" className="sm:pt-20 pt-16" />
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+</Layout>

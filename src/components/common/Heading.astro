@@ -1,0 +1,43 @@
+---
+import { Badge } from "@/components/interactive/ui/badge";
+import CardGradientBg from "@/components/background_animation/CardGradientBg.astro";
+
+interface Props {
+  section: string;
+  title: string;
+  highlights: string;
+  subtitle: string;
+}
+
+const { section, title, highlights, subtitle } = Astro.props;
+---
+
+<div class="sm:text-center flex flex-col gap-6 sm:gap-8">
+  <Badge
+    variant="outline"
+    className="text-primary border-primary/30 w-fit mx-auto"
+    data-aos="fade-up"
+  >
+    {section}
+  </Badge>
+  <div class="flex flex-col gap-3 sm:gap-5">
+    <h2
+      class="text-4xl sm:text-6xl font-bold"
+      data-aos="fade-up"
+      data-aos-delay="100"
+    >
+      {title}{" "}
+      <CardGradientBg className="bg-clip-text text-transparent text-nowrap">
+        {highlights}
+      </CardGradientBg>
+    </h2>
+
+    <p
+      class="text-base sm:text-lg text-muted-foreground max-w-3xl mx-auto"
+      data-aos="fade-up"
+      data-aos-delay="200"
+    >
+      {subtitle}
+    </p>
+  </div>
+</div>

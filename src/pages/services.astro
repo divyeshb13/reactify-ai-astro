@@ -1,0 +1,76 @@
+---
+export const prerender = true;
+import Layout from "@/layouts/Layout.astro";
+import Heading from "@/components/common/Heading.astro";
+import NeuralLine from "@/components/background_animation/NeuralLine.astro";
+import ServiceCard from "@/components/cards/ServiceCard.astro";
+import CTACard from "@/components/cards/CTACard.astro";
+import { client } from "@/lib/sanity";
+import { getIcon } from "@/utils/functions";
+import type { IService } from "@/utils/types";
+
+// Fetch services from Sanity
+let services: IService[] = [];
+try {
+  services = await client.fetch<IService[]>(
+    `*[_type == "service"] | order(order asc) {
+    "id": slug.current,
+    title,
+    description,
+    "iconName": icon,
+    features
+  }`,
+  );
+} catch (error) {
+  console.error("Error fetching services:", error);
+}
+---
+
+<Layout title="Services - ReactifyAI">
+  <section class="py-10 sm:py-20 sm:pt-40 pt-32 relative overflow-hidden">
+    <!-- Background Elements -->
+    <div class="container mx-auto relative z-10 flex flex-col gap-8 sm:gap-16">
+      <!-- Header -->
+      <Heading
+        section="Our Services"
+        title="Comprehensive"
+        highlights="AI Solutions"
+        subtitle="From machine learning to automation, we offer a full spectrum of AI services designed to transform your business operations and drive sustainable growth."
+      />
+
+      <div class="flex flex-col gap-8 sm:gap-12">
+        <!-- Services Grid -->
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-8">
+          {
+            services.length > 0 ? (
+              services.map((service, index: number) => (
+                <ServiceCard
+                  id={service.id}
+                  title={service.title}
+                  description={service.description}
+                  icon={getIcon(service.iconName)}
+                  features={service.features || []}
+                  animationDelay={300 + index * 100}
+                />
+              ))
+            ) : (
+              <div class="col-span-full text-center py-20 text-muted-foreground">
+                <p>No services found. Please check back later.</p>
+              </div>
+            )
+          }
+        </div>
+
+        <!-- CTA -->
+        <CTACard
+          title="Ready to Transform Your Business?"
+          subtitle="Let's discuss how our AI solutions can help you achieve your goals and stay ahead of the competition."
+          actions="Schedule a Consultation"
+          delay={800}
+          to="/contact"
+        />
+      </div>
+    </div>
+    <NeuralLine />
+  </section>
+</Layout>

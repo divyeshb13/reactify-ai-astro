@@ -1,0 +1,53 @@
+---
+import type { AboutCard2Props } from "@/utils/types";
+import BgGlow from "@/components/background_animation/BgGlow.astro";
+import DecorativeDot from "@/components/background_animation/DecorativeDot.astro";
+import AboutCard2Interactive from "@/components/interactive/AboutCard2Interactive";
+
+interface Props extends AboutCard2Props {}
+
+const { icon: Icon, value, label, description, className = "" } = Astro.props;
+---
+
+<AboutCard2Interactive client:load className={className}>
+  <div class="glow"></div>
+  <div
+    class="relative z-10 items-center w-full hover:scale-105 transition-transform duration-300 border rounded-3xl h-full sm:p-8 p-5 flex flex-col gap-4 sm:gap-6"
+  >
+    <div class="absolute inset-0">
+      <BgGlow
+        variant="primary"
+        size="sm"
+        positionClass="-top-10 -right-10"
+        opacity={0.1}
+      />
+      <DecorativeDot
+        className="top-1/4 right-1/4"
+        size="w-2 h-2"
+        colorClass="bg-primary/20"
+        variant="pulse"
+      />
+      <DecorativeDot
+        className="top-1/2 right-1/3"
+        size="w-1.5 h-1.5"
+        colorClass="bg-primary/25"
+        variant="none"
+        style={{ animation: "pulse 3s ease-in-out infinite" }}
+      />
+    </div>
+
+    <div
+      class="flex items-center justify-center sm:size-14 size-10 rounded-2xl bg-primary/10"
+    >
+      <Icon className="sm:size-8 size-5 text-primary" />
+    </div>
+
+    <div class="flex flex-col gap-1 items-center">
+      <div class="text-lg font-semibold text-primary">{value}</div>
+      <div class="text-base font-semibold">{label}</div>
+      <div class="text-sm text-muted-foreground leading-relaxed">
+        {description}
+      </div>
+    </div>
+  </div>
+</AboutCard2Interactive>
