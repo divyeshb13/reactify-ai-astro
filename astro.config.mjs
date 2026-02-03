@@ -19,6 +19,9 @@ export default defineConfig({
   image: {
     domains: ["cdn.sanity.io", "images.unsplash.com", "plus.unsplash.com"],
   },
+  build: {
+    inlineStylesheets: "always",
+  },
 
   vite: {
     plugins: [tailwindcss()],

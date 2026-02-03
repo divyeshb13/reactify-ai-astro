@@ -39,13 +39,28 @@ const {
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
 
-    <!-- Google Fonts Optimized Loading -->
+    <!-- Google Fonts Optimized Loading (non-blocking) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
+    <link
+      rel="preload"
+      as="style"
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap"
+    />
     <link
       href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap"
       rel="stylesheet"
+      media="print"
+      onload="this.media='all'"
     />
+    <noscript>
+      <link
+        href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap"
+        rel="stylesheet"
+      />
+    </noscript>
 
     <!-- Theme Script - Runs IMMEDIATELY before page renders to prevent flash -->
     <script is:inline>
@@ -84,7 +99,7 @@ const {
 
   <body class="min-h-screen bg-background text-sm sm:text-base">
     <!-- Toast Notifications (React Island) -->
-    <ThemedToastContainer client:load />
+    <ThemedToastContainer client:idle />
 
     <!-- Header -->
     <Header />
