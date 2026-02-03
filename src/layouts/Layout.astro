@@ -39,8 +39,47 @@ const {
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
 
+    <!-- Google Fonts Optimized Loading -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap"
+      rel="stylesheet"
+    />
+
     <!-- Theme Script - Runs IMMEDIATELY before page renders to prevent flash -->
-    <script is:inline src="/js/theme.js"></script>
+    <script is:inline>
+      (function () {
+        const THEME_KEY = "theme";
+
+        // Get theme from localStorage or system preference
+        const getInitialTheme = () => {
+          const stored = localStorage.getItem(THEME_KEY);
+          if (stored === "light" || stored === "dark") {
+            return stored;
+          }
+
+          // Fallback to system preference
+          if (
+            window.matchMedia &&
+            window.matchMedia("(prefers-color-scheme: dark)").matches
+          ) {
+            return "dark";
+          }
+
+          return "dark"; // Default to dark
+        };
+
+        const theme = getInitialTheme();
+
+        // Apply theme IMMEDIATELY
+        if (theme === "dark") {
+          document.documentElement.classList.add("dark");
+        } else {
+          document.documentElement.classList.remove("dark");
+        }
+      })();
+    </script>
   </head>
 
   <body class="min-h-screen bg-background text-sm sm:text-base">
