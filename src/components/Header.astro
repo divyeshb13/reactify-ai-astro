@@ -66,7 +66,7 @@ const currentPath = Astro.url.pathname;
 
         <div>
           <DropDown
-            client:load
+            client:idle
             label="Pages"
             items={headerPagesMenu}
             activePath={currentPath}
@@ -84,7 +84,7 @@ const currentPath = Astro.url.pathname;
 
       <!-- Right controls -->
       <div class="flex items-center gap-3">
-        <ThemeToggle client:load />
+        <ThemeToggle client:idle />
         <a
           href="/contact"
           class="hidden lg:inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm ring-offset-background transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 cursor-pointer bg-primary border-0 hover:scale-105 text-white shadow-lg hover:shadow-xl font-semibold h-11 rounded-md px-8"

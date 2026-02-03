@@ -9,7 +9,7 @@ interface Props extends AboutCard2Props {}
 const { icon: Icon, value, label, description, className = "" } = Astro.props;
 ---
 
-<AboutCard2Interactive client:load className={className}>
+<AboutCard2Interactive client:visible className={className}>
   <div class="glow"></div>
   <div
     class="relative z-10 items-center w-full hover:scale-105 transition-transform duration-300 border rounded-3xl h-full sm:p-8 p-5 flex flex-col gap-4 sm:gap-6"

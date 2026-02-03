@@ -16,7 +16,7 @@ interface Props extends TeamCardProps {
 const { image, name, role, bio, social, index, classname } = Astro.props;
 ---
 
-<TeamCardInteractive client:load index={index} classname={classname}>
+<TeamCardInteractive client:visible index={index} classname={classname}>
   <div class="glow" style={{ zIndex: 1 }}></div>
   <div class="relative mb-2" style={{ zIndex: 2 }}>
     <Image

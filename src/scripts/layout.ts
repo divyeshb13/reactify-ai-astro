@@ -1,31 +1,47 @@
 import AOS from "aos";
 import Lenis from "lenis";
 
-AOS.init({
-  duration: 1000,
-  easing: "ease-out-quart",
-  once: true,
-  offset: 0,
-  delay: 100,
-});
+let lenis: Lenis | null = null;
 
-const lenis = new Lenis({
-  duration: 1.2,
-  easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-  orientation: "vertical",
-  gestureOrientation: "vertical",
-  smoothWheel: true,
-  wheelMultiplier: 1,
-  touchMultiplier: 2,
-  infinite: false,
-});
+const initAnimations = () => {
+  AOS.init({
+    duration: 1000,
+    easing: "ease-out-quart",
+    once: true,
+    offset: 0,
+    delay: 100,
+  });
 
-function raf(time: number) {
-  lenis.raf(time);
+  lenis = new Lenis({
+    duration: 1.2,
+    easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+    orientation: "vertical",
+    gestureOrientation: "vertical",
+    smoothWheel: true,
+    wheelMultiplier: 1,
+    touchMultiplier: 2,
+    infinite: false,
+  });
+
+  const raf = (time: number) => {
+    lenis?.raf(time);
+    requestAnimationFrame(raf);
+  };
+
   requestAnimationFrame(raf);
-}
+};
 
-requestAnimationFrame(raf);
+const onIdle = (cb: () => void) => {
+  if ("requestIdleCallback" in window) {
+    window.requestIdleCallback(cb, { timeout: 2000 });
+  } else {
+    setTimeout(cb, 800);
+  }
+};
+
+window.addEventListener("load", () => {
+  onIdle(initAnimations);
+});
 
 document.addEventListener("DOMContentLoaded", () => {
   document
@@ -41,7 +57,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const targetId = href.substring(1);
         const targetElement = document.getElementById(targetId);
 
-        if (targetElement) {
+        if (targetElement && lenis) {
           lenis.scrollTo(targetElement, {
             offset: 0,
             duration: 1.2,
@@ -50,6 +66,8 @@ document.addEventListener("DOMContentLoaded", () => {
           if (history.pushState) {
             history.pushState(null, "", href);
           }
+        } else if (targetElement) {
+          targetElement.scrollIntoView({ behavior: "smooth", block: "start" });
         }
       });
     });
@@ -59,11 +77,13 @@ document.addEventListener("DOMContentLoaded", () => {
       const targetId = window.location.hash.substring(1);
       const targetElement = document.getElementById(targetId);
 
-      if (targetElement) {
+      if (targetElement && lenis) {
         lenis.scrollTo(targetElement, {
           offset: 0,
           duration: 1.2,
         });
+      } else if (targetElement) {
+        targetElement.scrollIntoView({ behavior: "smooth", block: "start" });
       }
     }, 100);
   }
